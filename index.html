@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Urna do clube</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🗳️%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2d6a4f">
+<style>
+:root{--bg:#f7f5f0;--card:#fff;--ink:#1d2125;--mut:#5f6872;--line:#ddd7ca;--acc:#2d6a4f;--accink:#fff;--warnbg:#fdf0e3;--warn:#9a4a12;--bar:#cfe6d9;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15181b;--card:#1e2226;--ink:#e8eaec;--mut:#9aa3ac;--line:#333a41;--acc:#6fcf9b;--accink:#0d1a13;--warnbg:#3a2a1a;--warn:#f0b27a;--bar:#264a39;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#15181b;--card:#1e2226;--ink:#e8eaec;--mut:#9aa3ac;--line:#333a41;--acc:#6fcf9b;--accink:#0d1a13;--warnbg:#3a2a1a;--warn:#f0b27a;--bar:#264a39;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:720px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:1.4rem;margin:0 0 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin:0 0 14px}
+.q{font-size:1.15rem;font-weight:600;margin:0 0 12px}
+.mut{color:var(--mut);font-size:.9rem;margin:6px 0}
+.btn,.ghost{display:block;width:100%;font:inherit;color:var(--ink);background:var(--card);border:1.5px solid var(--line);border-radius:10px;padding:12px 14px;margin:0 0 8px;cursor:pointer;text-align:center}
+.btn{background:var(--acc);color:var(--accink);border-color:var(--acc);font-weight:600;margin-top:12px}
+.btn:disabled{opacity:.5;cursor:default}
+input{width:100%;box-sizing:border-box;font:inherit;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:8px;padding:10px;margin:4px 0 12px}
+label{font-size:.9rem;color:var(--mut)}
+.warn{background:var(--warnbg);color:var(--warn);border-radius:10px;padding:12px 14px;margin:0 0 14px}
+.row{margin:0 0 12px}.top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.nm{display:flex;align-items:center;gap:8px}.th{width:36px;height:48px;object-fit:cover;border-radius:4px;border:1px solid var(--line)}
+.track{height:10px;background:var(--line);border-radius:6px;overflow:hidden;margin-top:4px}
+.fill{height:100%;background:var(--bar)}.win .fill{background:var(--acc)}
+.cinfo{display:flex;gap:12px;align-items:flex-start;justify-content:space-between}
+.urna{max-width:720px;margin:0 auto 14px;background:linear-gradient(#dedcd2,#c3c1b7);border:2px solid #8a8880;border-radius:16px;padding:10px 12px 14px;color:#111;box-shadow:0 6px 16px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.6)}
+.plate{display:flex;justify-content:space-between;align-items:center;font:700 .7rem Arial,sans-serif;letter-spacing:.18em;color:#555;padding:0 4px 8px}
+.spk{width:46px;height:12px;background:repeating-linear-gradient(90deg,#777 0 3px,transparent 3px 7px);border-radius:2px}
+.ubody{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:620px){.ubody{grid-template-columns:1.6fr 1fr}}
+.k.dot{position:relative}.k.dot:after{content:"";position:absolute;left:50%;bottom:6px;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:rgba(255,255,255,.55)}
+.lcd{background:#f5f5ef;border:3px solid #3a3a3a;border-radius:6px;min-height:300px;box-shadow:inset 0 0 14px rgba(0,0,0,.28);padding:12px;display:flex;flex-direction:column;font-family:Arial,Helvetica,sans-serif;color:#111}
+.lcd .lab{font-size:.75rem;letter-spacing:.06em;font-weight:700}
+.lcd .big{font-size:1.4rem;font-weight:800;margin:6px 0}
+.lcd img{width:90px;height:120px;object-fit:cover;border:1px solid #222}
+.lcd .nmx{font-size:1.1rem;font-weight:800;margin:1px 0 6px}
+.lcd .sm{font-size:.7rem;margin:-4px 0 6px}
+.dg{display:flex;gap:6px;margin:6px 0}
+.dg span{width:42px;height:52px;border:2px solid #222;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700}
+.hint{margin-top:auto;border-top:1px solid #222;padding-top:6px;font-size:.78rem}
+.fim{margin:auto;text-align:center}.fim b{display:block;font-size:5rem;line-height:1}
+.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;align-content:start}
+.k{font:700 1.3rem Arial,sans-serif;padding:14px 0;border:0;border-radius:6px;background:#2b2b2b;color:#fff;cursor:pointer;box-shadow:0 2px 0 #000}
+.k:active{transform:translateY(2px);box-shadow:none}
+.k.br{background:#fff;color:#111;border:2px solid #555;font-size:.8rem}
+.k.co{background:#e8772e;color:#111;font-size:.8rem}
+.k.ok{background:#2e9c4f;color:#fff;font-size:.8rem}
+body{min-height:100vh;background:radial-gradient(900px 420px at 50% -80px,color-mix(in srgb,var(--acc) 14%,transparent),transparent) no-repeat,var(--bg)}
+.top0{display:flex;align-items:center;justify-content:space-between;margin:0 0 16px}.top0 h1{margin:0}
+.sair{font:inherit;font-size:.85rem;color:var(--mut);background:none;border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer}
+.card{box-shadow:0 1px 2px rgba(0,0,0,.06),0 6px 18px rgba(0,0,0,.05);animation:in .25s ease both}
+@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.cg{display:block;width:100%;text-align:left;font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:0 0 12px;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.05);transition:transform .15s,border-color .15s}
+.cg:hover{transform:translateY(-2px);border-color:var(--acc)}.cgt{font-weight:700;font-size:1.1rem;margin-bottom:6px}.cgm{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.chip{font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:999px;background:var(--bar);color:var(--ink)}.chip.done{background:var(--line);color:var(--mut)}
+.back{font:inherit;font-size:.9rem;color:var(--mut);background:none;border:0;padding:0 0 12px;cursor:pointer}.sub{color:var(--mut);margin:0 0 12px}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.btn:hover:not(:disabled){filter:brightness(1.08)}.ghost:hover{border-color:var(--acc)}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+a.ghost{text-decoration:none}
+.tv{position:fixed;inset:0;z-index:50;background:radial-gradient(1200px 600px at 50% -100px,#1d4a36,#0b1410);color:#fff;overflow:auto;padding:5vh 6vw;box-sizing:border-box;font-size:clamp(16px,2.4vw,30px)}
+.tvq{font-size:1.6em;font-weight:800;margin:.2em 0 .8em}.tvs{opacity:.7;letter-spacing:.12em;font-size:.7em;margin:.4em 0}
+.tvr{display:flex;gap:1em;align-items:center;margin:0 0 .7em;padding:.5em;background:rgba(255,255,255,.07);border-radius:14px}
+.tvr img{width:2.6em;height:3.4em;object-fit:cover;border-radius:8px}
+.tvr.new{animation:in .6s ease both}.tvr.new .tvf{animation:grow 1.4s ease both}
+@keyframes grow{from{width:0}}
+.tvw{margin-top:.8em;padding:.8em 1em;border-radius:16px;background:#6fcf9b;color:#0b1410;font-weight:800;font-size:1.3em;animation:in .6s ease both}
+.tv .track{background:rgba(255,255,255,.15)}.tv .sair{color:#fff;border-color:rgba(255,255,255,.4)}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script type="module">
+import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import {getAuth,onAuthStateChanged,signInWithPopup,GoogleAuthProvider,signOut} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import {getFirestore,doc,getDoc,setDoc,updateDoc,deleteDoc,addDoc,collection,onSnapshot,writeBatch,getDocs} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+/* ====== CONFIGURE AQUI (veja o README) ====== */
+const FIREBASE={apiKey:'AIzaSyCXCy5Ae8Vppw6ZvLsf9G3MNL6V6JQTFPE',authDomain:'votacoes-atletico-barreiraense.firebaseapp.com',projectId:'votacoes-atletico-barreiraense',appId:'1:846725128812:web:11f6908d56cf0f9fab6e49'};
+const ADMIN_EMAIL='brunospadafloripa@gmail.com'; /* mesmo e-mail do arquivo firestore.rules */
+/* ============================================ */
+
+const app0=initializeApp(FIREBASE),auth=getAuth(app0),fdb=getFirestore(app0);
+const snapDoc=function(s){return {exists:s.exists(),data:function(){return s.data();}};};
+function makeDb(){return {
+ doc:function(p){var r=doc(fdb,p);return {
+  set:function(d){return setDoc(r,d);},update:function(d){return updateDoc(r,d);},delete:function(){return deleteDoc(r);},
+  get:async function(){return snapDoc(await getDoc(r));},
+  onSnapshot:function(cb,er){return onSnapshot(r,function(s){cb(snapDoc(s));},er);}};},
+ collection:function(p){var c=collection(fdb,p);return {
+  add:function(d){return addDoc(c,d);},
+  onSnapshot:function(cb,er){return onSnapshot(c,function(s){cb({size:s.size,docs:s.docs.map(function(d){return {id:d.id,data:function(){return d.data();}};})});},er);}};}
+};}
+async function saveAllowed(t){
+ var em=(t||'').toLowerCase().split(/[\s,;]+/).filter(function(x){return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(x);});
+ if(!em.length)return;var b=writeBatch(fdb);
+ em.forEach(function(x){b.set(doc(fdb,'allowed',x),{ok:true});});await b.commit();
+}
+(function(){
+var app=document.getElementById('app');
+var PH='data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 120"><rect width="90" height="120" fill="#c9c9c2"/><circle cx="45" cy="45" r="20" fill="#8a8a84"/><path d="M8 120c0-28 16-42 37-42s37 14 37 42z" fill="#8a8a84"/></svg>');
+var S={manage:false,tv:false,tvStep:0,allowedList:[],members:[],showAtt:false,phase:'',r2o:'',r2f:'',picks:[],cargos:[],old:null,cid:null,setup:false,listLoaded:false,auth:'load',email:'',ready:false,nodb:false,cfgLoaded:false,slow:false,cfg:null,uid:null,admin:false,canWrite:null,
+ vdocs:[],ballots:[],busy:false,ballotDoneRound:0,msg:'',confirm:'',lastRound:1,digits:'',mode:'',mute:false,
+ draft:{e:'',q:'Primeiro-ministro do Atlético Barreiraense',n:'15',b:false,c:[{n:'01',name:'Helton Weber Ferreira',party:'União Nacional das Questões Balançantes',sigla:'UNQB',vice:'Eduardo Narciso Schiavon',photo:null},{n:'18',name:'Ian Wiederkehr de Filippo',party:'Partido Sacudo',sigla:'PS',vice:'Gustavo Li Spada',photo:null},{n:'23',name:'Lucas Medeiros Oliva',party:'Partido Rabo Liberado',sigla:'PRL',vice:'Luigi Scolari',photo:null}]}};
+var AC=null;var db=makeDb();
+window.addEventListener('unhandledrejection',function(e){var r=e.reason;S.fatal=(r&&(r.code||r.message))||String(r);render();});
+window.addEventListener('error',function(e){if(/ResizeObserver/.test(e.message||''))return;S.fatal=e.message||'erro desconhecido';render();});
+
+function h(t,a){var e=document.createElement(t),k=Array.prototype.slice.call(arguments,2);
+ for(var x in (a||{})){var v=a[x];if(x==='class')e.className=v;else if(x.slice(0,2)==='on')e.addEventListener(x.slice(2),v);else if(v!==false&&v!=null)e.setAttribute(x,v===true?'':v);}
+ k.flat(Infinity).forEach(function(c){if(c==null||c===false)return;e.append(c.nodeType?c:document.createTextNode(c));});
+ return e;}
+function note(t){return h('div',{class:'card'},h('p',{class:'mut'},t));}
+function warn(t){return h('div',{class:'warn'},t);}
+function pct(n,t){return t?(n*100/t).toFixed(1).replace('.',',')+'%':'0%';}
+function rnd(c){return c.round||1;}
+function errTxt(e){return (e&&e.code)||'erro';}
+function norm(r){var c=Object.assign({},r);
+ if(!c.cands&&c.options)c.cands=c.options.map(function(nm,i){return {n:String(11+i),name:nm,photo:null};});
+ c.cands=c.cands||[];c.options=c.cands.map(function(x){return x.name;});return c;}
+function inRound(c,i){return rnd(c)===1||(c.finalists||[]).indexOf(i)>=0;}
+function all(c){return c.cands.map(function(_,i){return i;});}
+
+/* som */
+function tone(f,t0,d,v){if(S.mute)return;try{
+ if(!AC)AC=new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();
+ var o=AC.createOscillator(),g=AC.createGain(),t=AC.currentTime+t0;v=v||.06;
+ o.type='square';o.frequency.value=f;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.005);
+ g.gain.setValueAtTime(v,t+d-.01);g.gain.linearRampToValueAtTime(0,t+d);
+ o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+d+.02);}catch(e){}}
+function beepKey(){tone(1000,0,.07);}
+function beepDone(){tone(1500,0,.1);tone(1500,.16,.1);tone(1500,.32,1.2,.08);}
+
+/* apuração */
+function tally(c,r){
+ var counts=c.cands.map(function(){return 0;}),bad=0,total=0,bl=0,nu=0,pv=(c.mode==='prop'?parties(c).map(function(){return 0;}):[]);
+ S.ballots.forEach(function(b){
+  if((b.round||1)!==r||(b.eid||0)!==(c.eid||0))return;total++;
+  if(b.choice===-1)bl++;else if(b.choice===-2)nu++;
+  else if(c.mode==='prop'&&b.choice>=100&&pv[b.choice-100]!==undefined)pv[b.choice-100]++;
+  else if(typeof b.choice==='number'&&counts[b.choice]!==undefined&&(r===1||(c.finalists||[]).indexOf(b.choice)>=0))counts[b.choice]++;else bad++;
+ });
+ var k=vkey(c,r),voters=S.vdocs.filter(function(d){return d.data[k]===true||(!c.eid&&r===1&&d.data.voted===true);}).length;
+ var blank=bl+nu;
+ return {counts:counts,pv:pv,total:total,bl:bl,nu:nu,blank:blank,base:(c.blankCounts?total:total-blank),voters:voters,max:Math.max.apply(null,counts),invalid:(total>voters*nv(c)||total>c.expected*nv(c)||bad>0)};
+}
+function vkey(c,r){return c.eid?'e'+c.eid+'r'+r:'r'+r;}
+function hasVoted(r){var k=vkey(S.cfg,r);return S.vdocs.some(function(d){return d.id===S.uid&&(d.data[k]===true||(!S.cfg.eid&&r===1&&d.data.voted===true));});}
+function finalistsFrom(t){
+ var idx=t.counts.map(function(_,i){return i;}).sort(function(a,b){return t.counts[b]-t.counts[a];});
+ var cut=t.counts[idx[1]];
+ return idx.filter(function(i){return t.counts[i]>=cut;});
+}
+
+/* urna */
+function candOf(c,d){for(var i=0;i<c.cands.length;i++)if(c.cands[i].n===d&&inRound(c,i))return i;return -1;}
+function cur(c){if(S.mode==='b')return -1;if(c.mode==='prop'&&S.digits.length===2){var pi=partyIdx(c,S.digits);if(pi>=0)return 100+pi;}if(S.digits.length<nd(c))return null;var i=candOf(c,S.digits);return i<0?-2:i;}
+function canVote(c){return !!c&&c.status!=='closed'&&phase(c)==='on'&&!!S.uid&&S.canWrite!==false&&!hasVoted(rnd(c))&&!S.busy;}
+function press(d){if(!canVote(S.cfg)||S.mode==='b'||S.digits.length>=nd(S.cfg))return;S.digits+=d;beepKey();render();}
+function corrige(){if(!canVote(S.cfg))return;if(!S.digits&&!S.mode&&S.picks.length)S.picks.pop();else{S.digits='';S.mode='';}tone(700,0,.08);render();}
+function branco(){if(!canVote(S.cfg))return;S.mode='b';S.digits='';beepKey();render();}
+function confirma(){var c=S.cfg;if(!canVote(c))return;var ch=cur(c);if(ch==null)return;if(ch>=0&&S.picks.indexOf(ch)>=0)return;
+ if(S.picks.length+1<nv(c)){S.picks.push(ch);S.digits='';S.mode='';beepKey();tone(1400,.08,.08);render();return;}
+ beepDone();vote(S.picks.concat([ch]));}
+document.addEventListener('keydown',function(e){
+ var t=e.target&&e.target.tagName;if(t==='INPUT'||e.ctrlKey||e.metaKey||e.altKey||!canVote(S.cfg))return;
+ if(/^[0-9]$/.test(e.key))press(e.key);else if(e.key==='Backspace')corrige();
+ else if(e.key==='Enter'){e.preventDefault();confirma();}else if(e.key==='b'||e.key==='B')branco();
+});
+async function vote(list){
+ var c=S.cfg,r=rnd(c);S.busy=true;S.msg='';render();
+ try{
+  var b=writeBatch(fdb),k='r'+r,own=S.vdocs.some(function(d){return d.id===S.uid;}),flag={};flag[k]=true;
+  list.forEach(function(ch){b.set(doc(collection(fdb,BP(S.cid))),{round:r,choice:ch});});
+  if(own)b.update(doc(fdb,VP(S.cid),S.uid),flag);else b.set(doc(fdb,VP(S.cid),S.uid),flag);
+  await b.commit();S.digits='';S.mode='';S.picks=[];
+ }catch(e){S.msg='Não foi possível registrar o voto ('+errTxt(e)+'). Confirme de novo.';}
+ S.busy=false;render();
+}
+function screen(c){
+ var r=rnd(c),L=h('div',{class:'lcd','aria-live':'polite'});
+ if(S.busy)return h('div',{class:'lcd'},h('div',{class:'fim'},h('p',{},'Registrando…')));
+ if(hasVoted(r))return h('div',{class:'lcd'},h('div',{class:'fim'},h('b',{},'FIM'),h('p',{},'VOTOU')));
+ L.append(h('div',{class:'lab'},r+'º TURNO · '+(nv(c)>1?'VOTO '+(S.picks.length+1)+' DE '+nv(c)+' · ':'')+'SEU VOTO PARA'),h('div',{class:'big'},c.question),(S.picks.length>0?h('div',{class:'sm',style:'margin:0 0 6px'},'Já escolhidos: '+S.picks.map(function(i){return i<0?'branco/nulo':c.cands[i].name;}).join(', ')):''));
+ var ch=cur(c);
+ if(S.mode==='b')L.append(h('div',{class:'big'},'VOTO EM BRANCO'));
+ else{
+  var dg=h('div',{class:'dg'});for(var k=0;k<nd(c);k++)dg.append(h('span',{},S.digits[k]||''));
+  L.append(h('div',{class:'lab'},'NÚMERO'),dg);
+  if(ch!=null&&ch>=100){var pp=parties(c)[ch-100];L.append(h('div',{class:'big'},'VOTO DE LEGENDA'),h('div',{class:'nmx'},pp.sigla),h('div',{class:'sm'},pp.name||'Só no partido. Para votar num candidato, continue digitando o número.'));}
+  else if(ch!=null&&ch>=0&&S.picks.indexOf(ch)>=0)L.append(h('div',{class:'big'},'JÁ VOTADO'),h('div',{class:'nmx'},'Você já escolheu '+c.cands[ch].name+'. Aperte CORRIGE e escolha outro candidato.'));
+  else if(ch!=null&&ch>=0){var x=c.cands[ch];L.append(h('div',{class:'cinfo'},h('div',{},h('div',{class:'lab'},'NOME'),h('div',{class:'nmx'},x.name),x.sigla&&[h('div',{class:'lab'},'PARTIDO'),h('div',{class:'nmx'},x.sigla),h('div',{class:'sm'},x.party||'')],x.vice&&[h('div',{class:'lab'},'VICE'),h('div',{class:'nmx'},x.vice)]),h('img',{src:x.photo||PH,alt:''})));}
+  else if(ch===-2)L.append(h('div',{class:'big'},'NÚMERO ERRADO'),h('div',{class:'big'},'VOTO NULO'));
+ }
+ L.append(h('div',{class:'hint'},ch==null?'Digite o número do candidato.':'Aperte a tecla verde para CONFIRMAR este voto ou a laranja para CORRIGIR.'));
+ return L;
+}
+function urna(c){
+ var pad=h('div',{class:'pad'});
+ '123456789'.split('').forEach(function(d){pad.append(h('button',{class:'k'+(d==='5'?' dot':''),'aria-label':'Tecla '+d,onclick:function(){press(d);}},d));});
+ pad.append(h('span'),h('button',{class:'k',onclick:function(){press('0');}},'0'),h('span'),
+  h('button',{class:'k br',onclick:branco},'BRANCO'),h('button',{class:'k co',onclick:corrige},'CORRIGE'),h('button',{class:'k ok',onclick:confirma},'CONFIRMA'));
+ return h('div',{class:'urna'},h('div',{class:'plate'},h('span',{},'URNA ELETRÔNICA · CLUBE'),h('span',{class:'spk'})),h('div',{class:'ubody'},screen(c),pad));
+}
+
+/* configuração */
+function readPhoto(file,cb){
+ var fr=new FileReader();
+ fr.onload=function(){var im=new Image();im.onload=function(){
+  var W=120,H=160,cv=document.createElement('canvas');cv.width=W;cv.height=H;var x=cv.getContext('2d');
+  var s=Math.max(W/im.width,H/im.height),w=im.width*s,hh=im.height*s;
+  x.fillStyle='#fff';x.fillRect(0,0,W,H);x.drawImage(im,(W-w)/2,(H-hh)*0.3,w,hh);
+  cb(cv.toDataURL('image/jpeg',0.72));};im.onerror=function(){cb(null);};im.src=fr.result;};
+ fr.onerror=function(){cb(null);};fr.readAsDataURL(file);}
+function nextNum(){var u=S.draft.c.map(function(x){return x.n;});for(var i=11;i<100;i++)if(u.indexOf(String(i))<0)return String(i);return '';}
+function setup(){
+ var D=S.draft,q=h('input',{type:'text',value:D.q,maxlength:'200',placeholder:'Ex.: Presidente do clube',oninput:function(){D.q=q.value;}});
+ var n=h('input',{type:'number',min:'1',max:'200',value:D.n,oninput:function(){D.n=n.value;}});
+ var md=h('select',{style:'width:100%;font:inherit;padding:10px;margin:4px 0 12px;border-radius:8px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)',onchange:function(){D.m=md.value;rl.textContent=ruleTxt();}},h('option',{value:'maj'},'Majoritária (cargo único ou mais votados)'),h('option',{value:'prop'},'Proporcional por partido (deputados)')),rl=h('p',{class:'mut'}),ruleTxt=function(){var k=parseInt(D.s||'1',10);if(D.m==='prop')return 'Proporcional: o eleitor vota num candidato ou só no partido (digitando os 2 primeiros dígitos). Cadeiras por quociente eleitoral e maiores médias; dentro do partido, os mais votados são eleitos. Número do candidato = 2 dígitos do partido + os do candidato (ex.: 0101).';var v=parseInt(D.v||'1',10);return k>1?'Regra: com '+k+' vagas, os '+k+' candidatos mais votados são eleitos, sem 2º turno'+(v>1?'. Cada eleitor tem '+v+' votos, em candidatos diferentes':'')+'. A caixa acima só muda as porcentagens exibidas.':'Regra: se uma opção passar de 50%, ela vence. Caso contrário, haverá 2º turno entre as mais votadas.';},list=h('div'),sv=h('input',{type:'number',min:'1',max:'40',value:D.s||'1',oninput:function(){D.s=sv.value;rl.textContent=ruleTxt();}}),vt=h('input',{type:'number',min:'1',max:'40',value:D.v||'1',oninput:function(){D.v=vt.value;rl.textContent=ruleTxt();}});md.value=D.m||'maj';rl.textContent=ruleTxt();
+ D.c.forEach(function(x,i){
+  var nm=h('input',{type:'text',value:x.name,maxlength:'40',placeholder:'Nome do candidato',oninput:function(){x.name=nm.value;}});
+  var no=h('input',{type:'text',value:x.n,maxlength:'5',inputmode:'numeric',style:'width:80px',oninput:function(){x.n=no.value.trim();}});
+  var pa=h('input',{type:'text',value:x.party||'',maxlength:'60',placeholder:'Partido (nome completo)',oninput:function(){x.party=pa.value;}});
+  var sg=h('input',{type:'text',value:x.sigla||'',maxlength:'8',placeholder:'Sigla',style:'width:100px',oninput:function(){x.sigla=sg.value.trim();}});
+  var vi=h('input',{type:'text',value:x.vice||'',maxlength:'40',placeholder:'Nome do vice',oninput:function(){x.vice=vi.value;}});
+  var bi=h('input',{type:'text',value:x.bio||'',maxlength:'160',placeholder:'Slogan ou proposta (opcional)',oninput:function(){x.bio=bi.value;}});
+  var f=h('input',{type:'file',accept:'image/*',style:'display:none',onchange:function(){if(f.files[0])readPhoto(f.files[0],function(u){x.photo=u;render();});}});
+  list.append(h('div',{class:'card'},
+   h('div',{class:'cinfo'},h('img',{class:'th',src:x.photo||PH,alt:'',style:'width:60px;height:80px'}),h('div',{style:'flex:1'},nm,pa,h('label',{},'Sigla '),sg,h('label',{},' Número (mesmo nº de dígitos para todos) '),no,h('label',{},'Vice'),vi,bi)),
+   h('button',{class:'ghost',onclick:function(){f.click();}},x.photo?'Trocar foto':'Escolher foto'),f,
+   D.c.length>2&&h('button',{class:'ghost',onclick:function(){D.c.splice(i,1);render();}},'Remover candidato')));
+ });
+ return [h('div',{class:'card'},h('p',{class:'q'},'Nova votação'),h('button',{class:'ghost',onclick:function(){D.c=[{n:'1',name:'Sim',party:'',sigla:'',vice:'',bio:'',photo:null},{n:'2',name:'Não',party:'',sigla:'',vice:'',bio:'',photo:null}];D.s='1';D.v='1';D.m='maj';render();}},'Usar modelo Sim / Não (plebiscito)'),
+  h('label',{},'Cargo ou pergunta'),q,h('label',{},'Número de votantes esperados'),n,h('label',{},'Tipo de votação'),md,h('label',{},'Vagas (1 = cargo único, com 2º turno; mais de 1 = os mais votados são eleitos)'),sv,h('label',{},'Votos por eleitor (ex.: senadores com 2 vagas = 2 votos, em candidatos diferentes)'),vt,h('label',{},'Abre em (opcional; vazio = já aberta)'),dtIn(D,'o'),h('label',{},'Fecha em (opcional; vazio = você encerra manualmente)'),dtIn(D,'f'),h('p',{class:'mut'},S.allowedList.length+' eleitores cadastrados. Para adicionar ou remover, use "Gerenciar eleitores" na tela inicial.'),
+  h('label',{style:'display:block;margin:0 0 12px'},h('input',{type:'checkbox',checked:D.b,style:'width:auto;margin:0 8px 0 0',onchange:function(e){D.b=e.target.checked;}}),'Votos em branco/nulos entram no cálculo dos 50% (se desmarcado, contam só os válidos)'),
+  rl),
+  list,D.c.length<40&&h('button',{class:'ghost',onclick:function(){D.c.push({name:'',n:nextNum(),photo:null});render();}},'Adicionar candidato'),
+  S.msg&&warn(S.msg),h('button',{class:'btn',onclick:openVote},'Abrir 1º turno'),h('button',{class:'ghost',onclick:function(){S.setup=false;S.msg='';render();}},'Cancelar')];
+}
+async function openVote(){
+ var D=S.draft,nums=[],names=[],n=parseInt(D.n,10),sv=parseInt(D.s||'1',10),vt=parseInt(D.v||'1',10),ok=true,len=(D.c[0].n||'').length;
+ D.c.forEach(function(x){var nm=x.name.trim();if(!nm||names.indexOf(nm)>=0||!/^\d{1,5}$/.test(x.n)||x.n.length!==len||nums.indexOf(x.n)>=0)ok=false;names.push(nm);nums.push(x.n);});
+ if(!D.q.trim()){S.msg='Escreva o cargo ou a pergunta.';return render();}
+ if(!ok){S.msg='Cada candidato precisa de nome e de um número único, todos com a mesma quantidade de dígitos (de 1 a 5).';return render();}
+ if(!(n>0)){S.msg='Informe o número de votantes esperados.';return render();}
+ if(!(sv>=1&&sv<D.c.length)){S.msg='As vagas devem ser menos que o número de candidatos.';return render();}
+ if(!(vt>=1&&vt<=sv)){S.msg='Os votos por eleitor devem ir de 1 até o número de vagas.';return render();}
+ if(ts(D.f)&&(ts(D.f)<=Date.now()||(ts(D.o)&&ts(D.f)<=ts(D.o)))){S.msg='O horário de encerramento deve ser no futuro e depois da abertura.';return render();}
+ if(D.m==='prop'){var pm={},bad=false;D.c.forEach(function(x){var pre=x.n.slice(0,2),sg=(x.sigla||'').trim();if(!sg||len<3||(pm[pre]&&pm[pre]!==sg))bad=true;pm[pre]=sg;});var sgs=Object.keys(pm).map(function(k){return pm[k];});if(bad||sgs.length!==new Set(sgs).size||sv<2||vt!==1){S.msg='Proporcional: cada candidato precisa de sigla e de número com 3 ou mais dígitos, começando pelos 2 dígitos do partido (mesma sigla = mesmo prefixo); vagas ≥ 2 e 1 voto por eleitor.';return render();}}
+ try{
+  var id='c'+Date.now().toString(36);
+  await db.doc(P(id)).set({question:D.q.trim(),cands:D.c.map(function(x){return {n:x.n,name:x.name.trim(),party:(x.party||'').trim(),sigla:(x.sigla||'').trim(),vice:(x.vice||'').trim(),bio:(x.bio||'').trim(),photo:x.photo||null};}),expected:n,status:'open',round:1,seats:sv,votes:vt,mode:D.m==='prop'?'prop':'maj',digits:len,opensAt:ts(D.o),closesAt:ts(D.f),blankCounts:!!D.b,created:Date.now()});
+  S.setup=false;S.msg='';openCargo(id);
+ }catch(e){S.msg='Não foi possível abrir a votação ('+errTxt(e)+').';render();}
+}
+async function reconf(){var c=S.cfg;
+ S.draft={e:S.draft.e||'',q:c.question,n:String(c.expected),s:String(c.seats||1),v:String(c.votes||1),m:c.mode||'maj',o:toLocal(c.opensAt),f:toLocal(c.closesAt),b:!!c.blankCounts,c:c.cands.map(function(x){return {n:x.n,name:x.name,party:x.party||'',sigla:x.sigla||'',vice:x.vice||'',bio:x.bio||'',photo:x.photo||null};})};
+ try{await db.doc(P(S.cid)).delete();stop();S.cid=null;S.cfg=null;S.setup=true;render();}catch(e){S.msg='Não foi possível editar ('+errTxt(e)+').';render();}}
+async function newVote(){
+ try{var b=writeBatch(fdb),id=S.cid;
+  (await getDocs(collection(fdb,BP(id)))).forEach(function(d){b.delete(d.ref);});
+  (await getDocs(collection(fdb,VP(id)))).forEach(function(d){b.delete(d.ref);});
+  b.delete(doc(fdb,P(id)));await b.commit();S.confirm='';S.msg='';
+ }catch(e){S.msg='Não foi possível apagar ('+errTxt(e)+').';S.confirm='';render();}
+}
+async function closeVote(){
+ try{await db.doc(P(S.cid)).update({status:'closed'});S.confirm='';}
+ catch(e){S.msg='Não foi possível encerrar ('+errTxt(e)+').';S.confirm='';render();}
+}
+async function startRound2(){
+ var c=S.cfg,f=finalistsFrom(tally(c,1));
+ try{await db.doc(P(S.cid)).update({round:2,status:'open',finalists:f,opensAt:ts(S.r2o),closesAt:ts(S.r2f)});}
+ catch(e){S.msg='Não foi possível abrir o 2º turno ('+errTxt(e)+').';render();}
+}
+
+/* telas */
+function openView(c){
+ var r=rnd(c),t=tally(c,r),p=[];
+ if(!S.uid)p.push(note('Entre com sua conta para votar.'));
+ else if(S.canWrite===false)p.push(note('Seu acesso é somente de leitura, então não dá para votar. Peça ao organizador para convidar você com permissão de colaborador.'));
+ else{
+  if(r===2)p.push(note('Nenhuma opção passou de 50% no 1º turno. Neste turno votam apenas as mais votadas.'));
+  p.push(h('button',{class:'ghost',onclick:function(){S.showC=!S.showC;render();}},S.showC?'Ocultar candidatos':'Conheça os candidatos'));if(S.showC)p.push(candsCard(c));
+  p.push(phase(c)==='wait'?waitCard(c):urna(c),h('p',{class:'mut'},'Também funciona pelo teclado: números, Enter (confirma), Backspace (corrige) e B (branco). Votos em branco/nulos '+(c.blankCounts?'entram':'não entram')+' no cálculo dos 50%. O voto é secreto e não pode ser alterado.'),
+   h('button',{class:'ghost',onclick:function(){S.mute=!S.mute;render();}},'Som: '+(S.mute?'desligado':'ligado')));
+ }
+ p.push(h('p',{class:'mut'},t.voters+' de '+c.expected+' eleitores já votaram neste turno.'));
+ if(S.admin){
+  var a=h('div',{class:'card'},h('p',{class:'mut'},'Painel do organizador'));
+  if(r===1&&!t.total&&!t.voters)a.append(h('button',{class:'ghost',onclick:reconf},'Editar candidatos (antes do primeiro voto)'));
+  a.append(h('button',{class:'ghost',onclick:function(){S.showAtt=!S.showAtt;render();}},S.showAtt?'Ocultar comparecimento':'Ver comparecimento'));
+  if(S.confirm!=='close')a.append(h('button',{class:'ghost',onclick:function(){S.confirm='close';render();}},'Encerrar o '+r+'º turno e mostrar resultado'));
+  else a.append(h('p',{class:'mut'},'Ninguém mais poderá votar neste turno. Confirmar?'),h('button',{class:'btn',onclick:closeVote},'Sim, encerrar'),h('button',{class:'ghost',onclick:function(){S.confirm='';render();}},'Cancelar'));
+  p.push(a);if(S.showAtt)p.push(attend(c));
+ }
+ return p;
+}
+function bars(c,t,idxs){
+ var card=h('div',{class:'card'});
+ idxs.forEach(function(i){var x=c.cands[i],n=t.counts[i];
+  card.append(h('div',{class:'row'+(n===t.max&&n>0?' win':'')},
+   h('div',{class:'top'},h('span',{class:'nm'},h('img',{class:'th',src:x.photo||PH,alt:''}),x.n+' · '+x.name+(x.sigla?' ('+x.sigla+')':'')),h('span',{},n+' ('+pct(n,t.base)+')')),
+   h('div',{class:'track'},h('div',{class:'fill',style:'width:'+(t.base?n*100/t.base:0)+'%'}))));});
+ if(t.blank)card.append(h('p',{class:'mut'},'Brancos: '+t.bl+' · Nulos: '+t.nu+(c.blankCounts?' ('+pct(t.blank,t.total)+' dos votos)':' (não entram no cálculo)')));
+ return card;
+}
+function results(c){if(c.mode==='prop')return resultsP(c);if((c.seats||1)>1)return resultsN(c);
+ var r=rnd(c),p=[];
+ if(r===2){var t1=tally(c,1);p.push(h('div',{class:'card'},h('p',{class:'mut'},'Resultado do 1º turno'),h('p',{class:'mut'},'Nenhuma opção passou de 50%.')),bars(c,t1,all(c)));}
+ var t=tally(c,r),cand=r===2?c.finalists:all(c);
+ p.push(h('div',{class:'card'},h('p',{class:'mut'},'Resultado do '+r+'º turno'),h('p',{class:'q'},c.question)),bars(c,t,cand));
+ var leaders=cand.filter(function(i){return t.counts[i]===t.max;});
+ var names=function(a){return a.map(function(i){return c.options[i];}).join(', ');};
+ if(t.invalid)p.push(warn('Atenção: foram contados '+t.total+' votos para '+t.voters+' votantes registrados (esperados: '+c.expected+(nv(c)>1?', '+nv(c)+' votos cada':'')+'). Este turno deve ser considerado inválido e repetido.'));
+ else if(!t.base||t.max===0)p.push(note('Nenhum voto válido neste turno (sem votos ou só votos em branco/nulos). Repitam a votação.'));
+ else{
+  var box=h('div',{class:'card'}),w=leaders.length===1?leaders[0]:-1;
+  var win=function(lbl,txt){var x=c.cands[w];box.append(h('div',{class:'cinfo'},h('div',{},h('p',{class:'q'},lbl+x.n+' · '+x.name+(x.sigla?' ('+x.sigla+')':'')),h('p',{class:'mut'},(x.vice?'Vice: '+x.vice+'. ':'')+txt)),h('img',{class:'th',src:x.photo||PH,alt:'',style:'width:70px;height:93px'})));};
+  if(r===1){
+   if(w>=0&&t.counts[w]*2>t.base)win('Vencedora: ',pct(t.counts[w],t.base)+' dos votos'+(c.blankCounts?'':' válidos')+', mais de 50%. Não há 2º turno.');
+   else{
+    var f=finalistsFrom(t);
+    box.append(h('p',{class:'q'},'Haverá 2º turno'),h('p',{class:'mut'},'Nenhuma opção passou de 50%. Passam para o 2º turno: '+names(f)+'.'));
+    box.append(S.admin?h('div',{},h('label',{},'2º turno abre em (opcional)'),dtIn(S,'r2o'),h('label',{},'2º turno fecha em (opcional)'),dtIn(S,'r2f'),h('button',{class:'btn',onclick:startRound2},'Abrir 2º turno')):h('p',{class:'mut'},'Aguarde o organizador abrir o 2º turno.'));
+   }
+  }else{
+   if(w>=0)win('Resultado final: ',pct(t.counts[w],t.base)+' dos votos no 2º turno.');
+   else box.append(h('p',{class:'q'},'Empate no 2º turno'),h('p',{class:'mut'},'Empatadas: '+names(leaders)+'. Combinem a forma de desempate, como um sorteio.'));
+  }
+  box.append(h('p',{class:'mut'},'Conferência: '+t.total+' votos e '+t.voters+' votantes registrados.'));
+  p.push(box);
+ }
+ var a=h('div',{class:'card'},h('p',{class:'mut'},'Painel do organizador'));
+ if(S.confirm!=='new')a.append(h('button',{class:'ghost',onclick:function(){S.confirm='new';render();}},'Apagar esta votação'));
+ else a.append(h('p',{class:'mut'},'Os resultados deixarão de existir. Confirmar?'),h('button',{class:'btn',onclick:newVote},'Sim, apagar'),h('button',{class:'ghost',onclick:function(){S.confirm='';render();}},'Cancelar'));
+ p.push(h('button',{class:'ghost',onclick:function(){boletim(c);}},'Baixar boletim de urna (imagem)'),h('button',{class:'ghost',onclick:startTv},'Modo telão (apuração animada)'));if(S.admin)p.push(a);
+ return p;
+}
+
+var P=function(id){return id==='__old'?'config/main':'cargos/'+id;},VP=function(id){return id==='__old'?'voters':'cargos/'+id+'/voters';},BP=function(id){return id==='__old'?'ballots':'cargos/'+id+'/ballots';};
+function nd(c){return (c&&c.digits)||2;}
+function nv(c){return (c&&c.votes)||1;}
+function candsCard(c){
+ var card=h('div',{class:'card'},h('p',{class:'q'},'Conheça os candidatos'));
+ c.cands.forEach(function(x,i){if(!inRound(c,i))return;card.append(h('div',{class:'nm',style:'margin:0 0 12px;align-items:flex-start'},h('img',{class:'th',src:x.photo||PH,alt:'',style:'width:54px;height:72px'}),h('div',{},h('b',{},x.n+' · '+x.name+(x.sigla?' ('+x.sigla+')':'')),x.vice?h('div',{class:'mut'},'Vice: '+x.vice):'',x.bio?h('div',{},x.bio):'')));});
+ return card;
+}
+function parties(c){var pm={},out=[];c.cands.forEach(function(x,i){var pre=x.n.slice(0,2);if(!pm[pre]){pm[pre]={pre:pre,sigla:x.sigla||pre,name:x.party||'',idxs:[]};out.push(pm[pre]);}pm[pre].idxs.push(i);});return out;}
+function partyIdx(c,d){var P=parties(c);for(var i=0;i<P.length;i++)if(P[i].pre===d)return i;return -1;}
+function propResult(c,t){
+ var P=parties(c),N=c.seats,sum=function(a){return a.reduce(function(x,y){return x+y;},0);},V=sum(t.counts)+sum(t.pv);
+ var qe=Math.floor(V/N);if(V/N-qe>0.5)qe++;if(qe<1)qe=1;
+ var rows=P.map(function(p,pi){var nom=sum(p.idxs.map(function(i){return t.counts[i];}));return {p:p,nom:nom,leg:t.pv[pi],tot:nom+t.pv[pi],seats:0};});
+ rows.forEach(function(r){r.seats=Math.floor(r.tot/qe);});
+ var left=N-sum(rows.map(function(r){return r.seats;})),el=rows.filter(function(r){return r.tot>=0.8*qe;});if(!el.length)el=rows.filter(function(r){return r.tot>0;});
+ while(left>0&&el.length){var best=el[0];el.forEach(function(r){if(r.tot/(r.seats+1)>best.tot/(best.seats+1))best=r;});best.seats++;left--;}
+ rows.forEach(function(r){var ids=r.p.idxs.slice().sort(function(a,b){return t.counts[b]-t.counts[a];});r.elected=ids.slice(0,r.seats);r.tie=r.seats>0&&r.seats<ids.length&&t.counts[ids[r.seats-1]]===t.counts[ids[r.seats]];r.miss=Math.max(0,r.seats-ids.length);});
+ return {V:V,qe:qe,rows:rows,left:left};
+}
+function resultsP(c){
+ var t=tally(c,1),p=[h('div',{class:'card'},h('p',{class:'mut'},'Resultado · proporcional · '+c.seats+' vagas'),h('p',{class:'q'},c.question))];
+ if(t.invalid)p.push(warn('Atenção: foram contados '+t.total+' votos para '+t.voters+' votantes registrados (esperados: '+c.expected+'). A votação deve ser considerada inválida e repetida.'));
+ else if(!t.base)p.push(note('Nenhum voto válido. Repitam a votação.'));
+ else{
+  var R=propResult(c,t),card=h('div',{class:'card'},h('p',{class:'q'},'Cadeiras por partido'),h('p',{class:'mut'},'Votos válidos: '+R.V+' · quociente eleitoral: '+R.qe));
+  R.rows.slice().sort(function(a,b){return b.seats-a.seats||b.tot-a.tot;}).forEach(function(r){card.append(h('div',{style:'margin:0 0 10px'},h('div',{class:'top'},h('b',{},r.p.sigla+' · '+r.p.pre),h('b',{},r.seats+' cadeira'+(r.seats===1?'':'s'))),h('div',{class:'mut'},r.nom+' nominais + '+r.leg+' de legenda = '+r.tot)));});
+  p.push(card);
+  var box=h('div',{class:'card'},h('p',{class:'q'},'Eleitos'));
+  R.rows.forEach(function(r){r.elected.forEach(function(i){var x=c.cands[i];box.append(h('div',{class:'nm',style:'margin:0 0 8px'},h('img',{class:'th',src:x.photo||PH,alt:''}),x.n+' · '+x.name+' ('+r.p.sigla+') · '+t.counts[i]+(t.counts[i]===1?' voto':' votos')));});
+   if(r.tie)box.append(warn('Empate na última vaga de '+r.p.sigla+': desempatem (por exemplo, com um sorteio).'));if(r.miss)box.append(warn(r.p.sigla+' tem '+r.miss+' cadeira(s) sem candidato suficiente.'));});
+  if(R.left>0)box.append(warn(R.left+' vaga(s) sem partido elegível.'));
+  box.append(h('p',{class:'mut'},'Regra: quociente eleitoral; sobras por maiores médias entre partidos com pelo menos 80% do quociente; dentro do partido, os mais votados.'));
+  p.push(box);
+ }
+ p.push(h('button',{class:'ghost',onclick:function(){boletim(c);}},'Baixar boletim de urna (imagem)'),h('button',{class:'ghost',onclick:startTv},'Modo telão (apuração animada)'));
+ if(S.admin){var a=h('div',{class:'card'},h('p',{class:'mut'},'Painel do organizador'));
+  if(S.confirm!=='new')a.append(h('button',{class:'ghost',onclick:function(){S.confirm='new';render();}},'Apagar esta votação'));
+  else a.append(h('p',{class:'mut'},'Os resultados deixarão de existir. Confirmar?'),h('button',{class:'btn',onclick:newVote},'Sim, apagar'),h('button',{class:'ghost',onclick:function(){S.confirm='';render();}},'Cancelar'));
+  p.push(a);}
+ return p;
+}
+function resText(c,t,idx){
+ var r=rnd(c),k=c.seats||1,nm=function(i){return c.cands[i].n+' · '+c.cands[i].name;};
+ if(t.invalid)return 'Votação inválida: deve ser repetida';
+ if(c.mode==='prop'&&t.base>0)return 'Cadeiras: '+propResult(c,t).rows.filter(function(r){return r.seats>0;}).map(function(r){return r.p.sigla+' '+r.seats;}).join(' · ');
+ if(!t.base||t.max===0)return 'Sem votos válidos: deve ser repetida';
+ if(k>1){var last=t.counts[idx[k-1]],sure=idx.filter(function(i){return t.counts[i]>last;}),tied=idx.filter(function(i){return t.counts[i]===last;}),over=sure.length+tied.length>k;
+  return 'Eleitos: '+(last===0?sure:over?sure:sure.concat(tied)).map(nm).join(' / ')+(over&&last>0?' (empate na última vaga: '+tied.map(nm).join(' / ')+')':'');}
+ var lead=idx.filter(function(i){return t.counts[i]===t.max;});
+ if(r===1)return lead.length===1&&t.counts[lead[0]]*2>t.base?'Vencedor: '+nm(lead[0])+' ('+pct(t.counts[lead[0]],t.base)+')':'Sem maioria: 2º turno entre '+finalistsFrom(t).map(nm).join(' e ');
+ return lead.length===1?'Resultado final: '+nm(lead[0]):'Empate: '+lead.map(nm).join(' / ');
+}
+function boletim(c){
+ var r=rnd(c),t=tally(c,r),idx=(r===2?c.finalists:all(c)).slice().sort(function(a,b){return t.counts[b]-t.counts[a];});
+ var W=900,H=450+idx.length*46,cv=document.createElement('canvas');cv.width=W;cv.height=H;var x=cv.getContext('2d');
+ x.fillStyle='#fff';x.fillRect(0,0,W,H);x.strokeStyle='#222';x.lineWidth=3;x.strokeRect(14,14,W-28,H-28);
+ x.fillStyle='#111';x.font='700 34px Arial';x.fillText('BOLETIM DE URNA',44,74);
+ x.fillStyle='#555';x.font='19px Arial';x.fillText('Urna do clube · emitido em '+new Date().toLocaleString('pt-BR'),44,106);
+ x.fillStyle='#111';x.font='700 26px Arial';x.fillText(c.question.slice(0,52),44,158);
+ x.font='20px Arial';x.fillText(r+'º turno · '+((c.seats||1)>1?c.seats+' vagas':'1 vaga'),44,190);
+ x.fillStyle='#555';x.fillText('Nº',44,236);x.fillText('Candidato',130,236);x.textAlign='right';x.fillText('Votos',690,236);x.fillText('%',836,236);x.textAlign='left';
+ x.fillStyle='#111';var y=282;
+ idx.forEach(function(i){var d=c.cands[i];x.font='22px Arial';x.fillText(d.n,44,y);x.fillText((d.name+(d.sigla?' ('+d.sigla+')':'')).slice(0,34),130,y);x.textAlign='right';x.fillText(String(t.counts[i]),690,y);x.fillText(pct(t.counts[i],t.base),836,y);x.textAlign='left';y+=46;});
+ x.fillStyle='#555';x.font='19px Arial';x.fillText('Brancos: '+t.bl+' · Nulos: '+t.nu+' · Total de votos: '+t.total,44,y+10);
+ x.fillText('Votantes registrados: '+t.voters+' de '+c.expected+(t.invalid?' · ATENÇÃO: não confere':' · conferência OK'),44,y+42);
+ x.fillStyle='#111';x.font='700 24px Arial';x.fillText(resText(c,t,idx).slice(0,60),44,y+96);
+ cv.toBlob(function(bl){var f=new File([bl],'boletim-de-urna.png',{type:'image/png'});
+  if(navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f],title:'Boletim de urna'}).catch(function(){});}
+  else{var a=document.createElement('a');a.href=URL.createObjectURL(bl);a.download='boletim-de-urna.png';a.click();}});
+}
+var tvT=null;
+function startTv(){S.tv=true;S.tvStep=0;try{document.documentElement.requestFullscreen();}catch(e){}render();clearInterval(tvT);
+ tvT=setInterval(function(){var c=S.cfg;if(!c||!S.tv){clearInterval(tvT);return;}var n=(rnd(c)===2?c.finalists:all(c)).length;
+  if(S.tvStep<n+1){S.tvStep++;tone(500+S.tvStep*90,0,.18);if(S.tvStep===n+1)beepDone();render();}else clearInterval(tvT);},2200);}
+function tvView(c){
+ var r=rnd(c),t=tally(c,r),cand=r===2?c.finalists:all(c),asc=cand.slice().sort(function(a,b){return t.counts[a]-t.counts[b];}),n=asc.length,step=S.tvStep;
+ var box=h('div',{class:'tv'},h('button',{class:'sair',style:'position:fixed;top:14px;right:14px',onclick:function(){S.tv=false;clearInterval(tvT);try{document.exitFullscreen();}catch(e){}render();}},'Sair do telão'),
+  h('div',{class:'tvs'},'APURAÇÃO · '+r+'º TURNO'),h('div',{class:'tvq'},c.question));
+ if(step===0)box.append(h('div',{class:'tvs'},'Preparando a contagem…'));
+ asc.forEach(function(i,k){if(k>=step)return;var x=c.cands[i],w=t.base?t.counts[i]*100/t.base:0;
+  box.append(h('div',{class:'tvr'+(k===step-1&&step<=n?' new':'')},h('img',{src:x.photo||PH,alt:''}),h('div',{style:'flex:1'},h('div',{class:'top'},h('b',{},x.n+' · '+x.name+(x.sigla?' ('+x.sigla+')':'')),h('b',{},t.counts[i]+' · '+pct(t.counts[i],t.base))),h('div',{class:'track'},h('div',{class:'fill tvf',style:'width:'+w+'%;background:#6fcf9b'})))));});
+ if(step>n)box.append(h('div',{class:'tvw'},resText(c,t,asc.slice().reverse())),h('p',{class:'tvs'},'Brancos: '+t.bl+' · Nulos: '+t.nu+' · '+t.voters+' votantes'));
+ return box;
+}
+function manage(){
+ var ta=h('textarea',{rows:'3',placeholder:'e-mails novos, um por linha',style:'width:100%;box-sizing:border-box;font:inherit;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:8px;padding:10px;margin:4px 0 8px'});
+ var card=h('div',{class:'card'},h('p',{class:'q'},'Eleitores cadastrados ('+S.allowedList.length+')'),h('p',{class:'mut'},'Quem for removido perde o acesso ao site. Votos já dados continuam valendo: como o voto é secreto, não dá para desfazê-lo.'));
+ S.allowedList.slice().sort().forEach(function(e){
+  var m=S.members.filter(function(z){return z.email===e;})[0],row=h('div',{class:'top',style:'margin:0 0 8px'},h('span',{},(m&&m.name?m.name+' · ':'')+e));
+  if(S.confirm==='rm:'+e)row.append(h('span',{},h('button',{class:'sair',onclick:function(){removeEmail(e);}},'Confirmar'),' ',h('button',{class:'sair',onclick:function(){S.confirm='';render();}},'Cancelar')));
+  else row.append(h('button',{class:'sair',onclick:function(){S.confirm='rm:'+e;render();}},'Remover'));
+  card.append(row);});
+ return [h('button',{class:'back',onclick:function(){S.manage=false;S.confirm='';S.msg='';render();}},'← Todas as votações'),S.msg&&warn(S.msg),
+  h('div',{class:'card'},h('p',{class:'q'},'Adicionar eleitores'),ta,h('button',{class:'btn',onclick:function(){addEmails(ta.value);}},'Adicionar')),card];
+}
+async function addEmails(t){try{await saveAllowed(t);S.msg='';}catch(e){S.msg='Não foi possível adicionar ('+errTxt(e)+').';}render();}
+async function removeEmail(e){try{var b=writeBatch(fdb);b.delete(doc(fdb,'allowed',e));S.members.filter(function(m){return m.email===e;}).forEach(function(m){b.delete(doc(fdb,'members',m.uid));});await b.commit();S.confirm='';S.msg='';}catch(x){S.msg='Não foi possível remover ('+errTxt(x)+').';S.confirm='';render();}}
+function ts(v){return v?new Date(v).getTime():0;}
+function toLocal(ms){return ms?new Date(ms-new Date(ms).getTimezoneOffset()*60000).toISOString().slice(0,16):'';}
+function fmt(ms){return new Date(ms).toLocaleString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});}
+function phase(c){var n=Date.now();if(c.opensAt&&n<c.opensAt)return 'wait';if(c.closesAt&&n>=c.closesAt)return 'over';return 'on';}
+function cdText(c){var m=Math.max(0,Math.floor((c.opensAt-Date.now())/1000)),d=Math.floor(m/86400),hh=Math.floor(m%86400/3600),mi=Math.floor(m%3600/60);return (d?d+'d ':'')+hh+'h '+mi+'min '+(m%60)+'s';}
+function waitCard(c){return h('div',{class:'card'},h('p',{class:'q'},'A votação ainda não abriu'),h('p',{class:'mut'},'Abre em '+fmt(c.opensAt)+'. Faltam ',h('b',{id:'cd'},cdText(c)),'.'));}
+function dtIn(o,k){var i=h('input',{type:'datetime-local',value:o[k]||'',oninput:function(){o[k]=i.value;}});return i;}
+setInterval(function(){var c=S.cfg;if(!c)return;var ph=phase(c);if(ph!==S.phase){S.phase=ph;render();return;}var el=document.getElementById('cd');if(el)el.textContent=cdText(c);},1000);
+function attend(c){
+ var r=rnd(c),em=S.allowedList.slice(),ad=ADMIN_EMAIL.toLowerCase(),L=['Ainda não acessou','Entrou, não votou','Já votou'];if(em.indexOf(ad)<0)em.push(ad);
+ var rows=em.sort().map(function(e){var m=S.members.filter(function(x){return x.email===e;})[0];return {e:e,name:m&&m.name,st:!m?0:(S.vdocs.some(function(d){return d.id===m.uid&&d.data['r'+r]===true;})?2:1)};});
+ var pend=rows.filter(function(x){return x.st<2;});
+ var card=h('div',{class:'card'},h('p',{class:'q'},'Comparecimento: '+(rows.length-pend.length)+' de '+rows.length),h('p',{class:'mut'},'Mostra só quem votou, nunca em quem.'));
+ rows.sort(function(a,b){return a.st-b.st;}).forEach(function(x){card.append(h('div',{class:'top',style:'margin:0 0 6px'},h('span',{},(x.name?x.name+' · ':'')+x.e),h('span',{class:'chip'+(x.st<2?' done':'')},L[x.st])));});
+ if(pend.length){var msg='Oi! Ainda falta votar em "'+c.question+'" na Urna do clube. Faltam: '+pend.map(function(x){return x.name||x.e.split('@')[0];}).join(', ')+'. Link: '+location.href.split('#')[0];
+  card.append(h('a',{class:'ghost',href:'https://wa.me/?text='+encodeURIComponent(msg),target:'_blank',rel:'noopener'},'Cobrar os atrasados no WhatsApp'));}
+ return card;
+}
+var unsubs=[];
+function err(e){S.slow=true;S.dbErr=(e&&e.code)||'erro';render();}
+function newDraft(){var e=function(){return {name:'',n:'',party:'',sigla:'',vice:'',photo:null};};return {e:S.draft.e||'',q:'',n:'15',s:'1',v:'1',m:'maj',o:'',f:'',b:false,c:[e(),e()]};}
+function subList(){
+ db.collection('cargos').onSnapshot(function(s){S.cargos=s.docs.map(function(d){return {id:d.id,c:norm(d.data())};}).sort(function(a,b){return (a.c.created||0)-(b.c.created||0);});S.listLoaded=true;render();},err);
+ if(S.admin){db.collection('allowed').onSnapshot(function(s){S.allowedList=s.docs.map(function(d){return d.id;});render();},function(){});db.collection('members').onSnapshot(function(s){S.members=s.docs.map(function(d){return Object.assign({uid:d.id},d.data());});render();},function(){});}
+ db.doc('config/main').onSnapshot(function(s){S.old=s.exists?norm(s.data()):null;render();},function(){});
+}
+function stop(){unsubs.forEach(function(f){f();});unsubs=[];}
+function openCargo(id){
+ stop();S.cid=id;S.cfg=null;S.cfgLoaded=false;S.vdocs=[];S.ballots=[];S.digits='';S.mode='';S.picks=[];S.confirm='';S.msg='';S.lastRound=1;S.ballotDoneRound=0;
+ unsubs.push(db.doc(P(id)).onSnapshot(function(s){S.cfg=s.exists?norm(s.data()):null;S.cfgLoaded=true;if(!S.cfg){stop();S.cid=null;}render();},err));
+ unsubs.push(db.collection(VP(id)).onSnapshot(function(s){S.vdocs=s.docs.map(function(d){return {id:d.id,data:d.data()};});render();},err));
+ unsubs.push(db.collection(BP(id)).onSnapshot(function(s){S.ballots=s.docs.map(function(d){return d.data();});render();},err));
+ render();
+}
+function chip(c){var ph=phase(c);if(c.status==='closed'||ph==='over')return h('span',{class:'chip done'},'Encerrada');if(ph==='wait')return h('span',{class:'chip'},'Abre '+fmt(c.opensAt));return h('span',{class:'chip'},'Aberta · '+rnd(c)+'º turno'+(c.closesAt?' · até '+fmt(c.closesAt):''));}
+function cargoCard(id,c){return h('button',{class:'cg',onclick:function(){openCargo(id);}},h('div',{class:'cgt'},c.question),h('div',{class:'cgm'},chip(c),h('span',{class:'mut'},c.cands.length+' candidatos'+((c.seats||1)>1?' · '+c.seats+' vagas'+(nv(c)>1?' · '+nv(c)+' votos por eleitor':''):''))));}
+function home(){
+ var p=[h('p',{class:'sub'},'Escolha uma votação para participar.')];
+ S.cargos.forEach(function(x){p.push(cargoCard(x.id,x.c));});
+ if(S.old)p.push(cargoCard('__old',S.old));
+ if(!S.cargos.length&&!S.old)p.push(note(S.listLoaded?'Nenhuma votação aberta no momento.':'Carregando…'));
+ if(S.admin)p.push(h('button',{class:'ghost',onclick:function(){S.manage=true;S.confirm='';S.msg='';render();}},'Gerenciar eleitores ('+S.allowedList.length+')'));
+ if(S.admin)p.push(h('button',{class:'btn',onclick:function(){S.draft=newDraft();S.setup=true;S.msg='';render();}},'+ Nova votação'));
+ return p;
+}
+function back(){return h('button',{class:'back',onclick:function(){stop();S.cid=null;S.cfg=null;S.msg='';render();}},'← Todas as votações');}
+function resultsN(c){
+ var t=tally(c,1),idx=all(c).sort(function(a,b){return t.counts[b]-t.counts[a];}),k=c.seats,p=[];
+ p.push(h('div',{class:'card'},h('p',{class:'mut'},'Resultado · '+k+' vagas'),h('p',{class:'q'},c.question)),bars(c,t,idx));
+ if(t.invalid)p.push(warn('Atenção: foram contados '+t.total+' votos para '+t.voters+' votantes registrados (esperados: '+c.expected+(nv(c)>1?', '+nv(c)+' votos cada':'')+'). A votação deve ser considerada inválida e repetida.'));
+ else if(!t.base||t.max===0)p.push(note('Nenhum voto válido (sem votos ou só votos em branco/nulos). Repitam a votação.'));
+ else{
+  var last=t.counts[idx[k-1]],sure=idx.filter(function(i){return t.counts[i]>last;}),tied=idx.filter(function(i){return t.counts[i]===last;});
+  var box=h('div',{class:'card'},h('p',{class:'q'},'Eleitos'));
+  var line=function(i){var x=c.cands[i];return h('div',{class:'nm',style:'margin:0 0 8px'},h('img',{class:'th',src:x.photo||PH,alt:''}),x.n+' · '+x.name+(x.sigla?' ('+x.sigla+')':'')+' · '+t.counts[i]+(t.counts[i]===1?' voto':' votos'));};
+  if(last===0)tied=[];var over=sure.length+tied.length>k;
+  sure.forEach(function(i){box.append(line(i));});
+  if(!over)tied.forEach(function(i){box.append(line(i));});
+  if(!over&&sure.length+tied.length<k)box.append(h('p',{class:'mut'},(k-sure.length-tied.length)+' vaga(s) sem eleito: não houve votos suficientes.'));
+  else box.append(warn('Empate na última vaga entre: '+tied.map(function(i){return c.options[i];}).join(', ')+'. Desempatem (por exemplo, com um sorteio) para fechar as '+k+' vagas.'));
+  box.append(h('p',{class:'mut'},'Conferência: '+t.total+' votos e '+t.voters+' votantes registrados.'));
+  p.push(box);
+ }
+ var a=h('div',{class:'card'},h('p',{class:'mut'},'Painel do organizador'));
+ if(S.confirm!=='new')a.append(h('button',{class:'ghost',onclick:function(){S.confirm='new';render();}},'Apagar esta votação'));
+ else a.append(h('p',{class:'mut'},'Os resultados deixarão de existir. Confirmar?'),h('button',{class:'btn',onclick:newVote},'Sim, apagar'),h('button',{class:'ghost',onclick:function(){S.confirm='';render();}},'Cancelar'));
+ p.push(h('button',{class:'ghost',onclick:function(){boletim(c);}},'Baixar boletim de urna (imagem)'),h('button',{class:'ghost',onclick:startTv},'Modo telão (apuração animada)'));if(S.admin)p.push(a);
+ return p;
+}
+function body(){
+ if(S.auth==='cfg')return note('Falta configurar o Firebase. Abra o README e cole as chaves do seu projeto no início do arquivo index.html.');
+ if(S.auth==='load')return note('Carregando…');
+ if(S.auth==='out')return h('div',{class:'card'},h('p',{class:'q'},'Entre para votar'),h('p',{class:'mut'},'Use a conta Google do e-mail que o organizador cadastrou.'),S.msg&&warn(S.msg),h('button',{class:'btn',onclick:signIn},'Entrar com Google'));
+ if(S.auth==='denied')return h('div',{class:'card'},h('p',{class:'q'},'E-mail não autorizado'),h('p',{class:'mut'},(S.email||'')+' não está na lista de eleitores. Fale com o organizador.'),h('button',{class:'ghost',onclick:signOutFn},'Sair'));
+ if(!S.ready)return note('Carregando…');
+ if(S.manage&&S.admin)return manage();
+ if(S.setup&&S.admin)return setup();
+ if(!S.cid)return home();
+ if(!S.cfgLoaded)return note(S.slow?'Ainda não consegui acessar os dados'+(S.dbErr?' ('+S.dbErr+')':'')+'. Verifique a conexão.':'Carregando…');
+ var c=S.cfg;if(!c)return home();
+ if(rnd(c)!==S.lastRound){S.lastRound=rnd(c);S.digits='';S.mode='';S.picks=[];S.confirm='';}
+ var fin=c.status==='closed'||phase(c)==='over';
+ if(S.tv&&fin)return tvView(c);
+ return [back(),S.msg&&warn(S.msg),fin?results(c):openView(c)];
+}
+function render(){var b;try{b=body();}catch(e){b=warn('Erro: '+e.message);}
+ app.replaceChildren(h('div',{class:'wrap'},h('div',{class:'top0'},h('h1',{},'Urna do clube'),h('span',{},h('button',{class:'sair','aria-label':'Aumentar o tamanho do texto',onclick:function(){S.zoom=((S.zoom||0)+1)%3;document.documentElement.style.zoom=['1','1.15','1.3'][S.zoom];render();}},'A+'),' ',S.auth==='in'&&h('button',{class:'sair',onclick:signOutFn},'Sair'))),S.fatal&&warn('Erro: '+S.fatal),b));}
+function signIn(){signInWithPopup(auth,new GoogleAuthProvider()).catch(function(e){S.msg='Não foi possível entrar ('+errTxt(e)+').';render();});}
+function signOutFn(){signOut(auth);}
+
+function init(){
+ setTimeout(function(){if(S.auth==='in'&&!S.cfgLoaded){S.slow=true;render();}},10000);
+ setTimeout(function(){if(S.auth==='load'){S.auth='out';S.msg='O login demorou para responder. Toque em Entrar com Google para continuar.';render();}},6000);
+ if(FIREBASE.apiKey.indexOf('COLE')===0){S.auth='cfg';return render();}
+ render();
+ onAuthStateChanged(auth,async function(u){
+  S.msg='';
+  if(!u){S.auth='out';S.uid=null;S.ready=false;return render();}
+  S.uid=u.uid;S.email=(u.email||'').toLowerCase();S.admin=S.email===ADMIN_EMAIL.toLowerCase();
+  var ok=S.admin;
+  if(!ok){try{ok=(await getDoc(doc(fdb,'allowed',S.email))).exists();}catch(e){ok=false;}}
+  if(!ok){S.auth='denied';return render();}
+  try{await setDoc(doc(fdb,'members',u.uid),{email:S.email,name:u.displayName||''});}catch(e){}
+  S.auth='in';S.canWrite=true;S.ready=true;subList();render();
+ });
+}
+init();
+})();
+</script>
+</body>
+</html>
