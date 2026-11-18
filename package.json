@@ -1,0 +1,6 @@
+{
+  "name": "urna-do-clube",
+  "private": true,
+  "type": "module",
+  "scripts": {"test": "node --test testes/apuracao.test.mjs"}
+}

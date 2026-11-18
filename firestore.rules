@@ -1,0 +1,120 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function mail() { return request.auth.token.email.lower(); }
+    function signed() { return request.auth != null && request.auth.token.email_verified == true; }
+
+    // E-mail do administrador (o mesmo ADMIN_EMAIL do index.html)
+    function isAdmin() { return signed() && mail() == 'brunospadafloripa@gmail.com'; }
+
+    // Janela de votação definida no cargo (0 = sem limite), conferida com o relógio do servidor
+    function inWindow(cid) {
+      let c = get(/databases/$(database)/documents/cargos/$(cid)).data;
+      return (c.get('opensAt', 0) == 0 || request.time.toMillis() >= c.get('opensAt', 0)) &&
+             (c.get('closesAt', 0) == 0 || request.time.toMillis() < c.get('closesAt', 0));
+    }
+
+    function isAllowed() {
+      return isAdmin() || (signed() &&
+        exists(/databases/$(database)/documents/allowed/$(mail())));
+    }
+
+    // Lista de e-mails autorizados a votar (o id do documento é o e-mail)
+    match /allowed/{id} {
+      allow read: if isAdmin() || (signed() && mail() == id);
+      allow write: if isAdmin();
+    }
+
+    // Configuração da votação: só o administrador altera
+    match /config/{id} {
+      allow read: if isAllowed();
+      allow write: if isAdmin();
+    }
+
+    // Quem já votou, por turno (sem dizer em quem)
+    match /voters/{uid} {
+      allow read: if isAllowed();
+      allow create: if isAllowed() && request.auth.uid == uid &&
+        ((request.resource.data.keys().hasOnly(['r1']) && request.resource.data.r1 == true) ||
+         (request.resource.data.keys().hasOnly(['r2']) && request.resource.data.r2 == true));
+      allow update: if isAllowed() && request.auth.uid == uid &&
+        resource.data.keys().hasOnly(['r1']) &&
+        request.resource.data.keys().hasOnly(['r1', 'r2']) &&
+        request.resource.data.r1 == true && request.resource.data.r2 == true;
+      allow delete: if isAdmin();
+    }
+
+    // Votos anônimos: não guardam quem votou. Só são aceitos junto com o
+    // registro de que a pessoa votou naquele turno, com a votação aberta.
+    match /ballots/{id} {
+      allow read: if isAllowed();
+      allow create: if isAllowed() &&
+        request.resource.data.keys().hasOnly(['round', 'choice']) &&
+        request.resource.data.round in [1, 2] &&
+        request.resource.data.choice is int &&
+        request.resource.data.choice >= -2 && request.resource.data.choice < 200 &&
+        get(/databases/$(database)/documents/config/main).data.status == 'open' &&
+        get(/databases/$(database)/documents/config/main).data.round == request.resource.data.round &&
+        getAfter(/databases/$(database)/documents/voters/$(request.auth.uid))
+          .data.get('r' + string(request.resource.data.round), false) == true &&
+        (!exists(/databases/$(database)/documents/voters/$(request.auth.uid)) ||
+         get(/databases/$(database)/documents/voters/$(request.auth.uid))
+          .data.get('r' + string(request.resource.data.round), false) == false);
+      allow delete: if isAdmin();
+    }
+
+    // Identidade do clube (nome, logo, cor): leitura pública, só o administrador altera
+    match /settings/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Quem já entrou no site (e-mail e nome), para o painel de comparecimento do administrador
+    match /members/{uid} {
+      allow read: if isAdmin();
+      allow create, update: if signed() && request.auth.uid == uid &&
+        request.resource.data.keys().hasOnly(['email', 'name']) &&
+        request.resource.data.email == mail() && request.resource.data.name is string;
+      allow delete: if isAdmin();
+    }
+
+    // Votações por cargo (várias no mesmo site): cargos/{id}, com voters e ballots dentro
+    match /cargos/{cid} {
+      allow read: if isAllowed();
+      allow write: if isAdmin();
+
+      match /voters/{uid} {
+        allow read: if isAllowed();
+        allow create: if isAllowed() && request.auth.uid == uid &&
+          ((request.resource.data.keys().hasOnly(['r1']) && request.resource.data.r1 == true) ||
+           (request.resource.data.keys().hasOnly(['r2']) && request.resource.data.r2 == true));
+        allow update: if isAllowed() && request.auth.uid == uid &&
+          resource.data.keys().hasOnly(['r1']) &&
+          request.resource.data.keys().hasOnly(['r1', 'r2']) &&
+          request.resource.data.r1 == true && request.resource.data.r2 == true;
+        allow delete: if isAdmin();
+      }
+
+      match /ballots/{id} {
+        allow read: if isAllowed();
+        allow create: if isAllowed() &&
+          ((request.resource.data.keys().hasOnly(['round', 'choice']) &&
+            request.resource.data.choice is int &&
+            request.resource.data.choice >= -2 && request.resource.data.choice < 200) ||
+           (request.resource.data.keys().hasOnly(['round', 'ranks']) &&
+            request.resource.data.ranks is list &&
+            request.resource.data.ranks.size() >= 1 && request.resource.data.ranks.size() <= 12)) &&
+          request.resource.data.round in [1, 2] &&
+          get(/databases/$(database)/documents/cargos/$(cid)).data.status == 'open' && inWindow(cid) &&
+          get(/databases/$(database)/documents/cargos/$(cid)).data.round == request.resource.data.round &&
+          getAfter(/databases/$(database)/documents/cargos/$(cid)/voters/$(request.auth.uid))
+            .data.get('r' + string(request.resource.data.round), false) == true &&
+          (!exists(/databases/$(database)/documents/cargos/$(cid)/voters/$(request.auth.uid)) ||
+           get(/databases/$(database)/documents/cargos/$(cid)/voters/$(request.auth.uid))
+            .data.get('r' + string(request.resource.data.round), false) == false);
+        allow delete: if isAdmin();
+      }
+    }
+  }
+}
